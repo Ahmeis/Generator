@@ -6,8 +6,6 @@ public class Circle{
 	private int xOffset, yOffset;
 	private Font cFont = new Font("Times new roman",Font.BOLD,35);
 	private Color fColor = Color.LIGHT_GRAY;
-	private String fName;
-	private int fSize =35, fStyle =1;
 	private Graphics2D g2;
 	private FontMetrics fm;
 	Circle(int radius){
@@ -18,9 +16,6 @@ public class Circle{
 		thickness = Old.getThickness();
 		cFont = Old.getFont();
 		fColor = Old.getFontColor();
-		fName = Old.getFontName();
-		fStyle = Old.getFontStyle();
-		fSize = Old.getFontSize();
 		g2 = Old.getGraphics();
 		fm = Old.getFontMetrics();
 		choice = S;
@@ -30,9 +25,6 @@ public class Circle{
 		thickness = Old.getThickness();
 		cFont = Old.getFont();
 		fColor = Old.getFontColor();
-		fName = Old.getFontName();
-		fStyle = Old.getFontStyle();
-		fSize = Old.getFontSize();
 		g2 = Old.getGraphics();
 		fm = Old.getFontMetrics();
 		choice = S;
@@ -60,26 +52,8 @@ public class Circle{
 	void setChoice(String C){
 		choice = C;
 	}
-	void setFont(String S, int style, int size){
-		cFont = new Font(S,style,size);
-		fName = S;
-		fSize = size;
-		fStyle = style;
-	}
 	void setFont(Font f){
 		cFont = f;
-		fName = f.getFontName();
-		fStyle = f.getStyle();
-		fSize = f.getSize();
-	}
-	String getFontName(){
-		return fName;
-	}
-	int getFontStyle(){
-		return fStyle;
-	}
-	int getFontSize(){
-		return fSize;
 	}
 	Font getFont(){
 		return cFont;
@@ -110,16 +84,13 @@ public class Circle{
 						Cy + fm.getHeight() -fm.getAscent()*14/15 +yOffset);
 	}
 	void setFontSize(int size){
-		cFont = new Font(fName,fStyle,size);
-		fSize = size;
+		cFont = new Font(cFont.getFontName(),cFont.getStyle(),size);
 	}
 	void setFontName(String name){
-		cFont = new Font(name, fStyle, fSize);
-		fName = name;
+		cFont = new Font(name, cFont.getStyle(),cFont.getSize());
 	}
 	void setFontStyle(int style){
-		cFont = new Font(fName, style, fSize);
-		fStyle = style;
+		cFont = new Font(cFont.getFontName(), style, cFont.getSize());
 	}
 	private void setGraphicsFont(){
 		g2.setFont(cFont);

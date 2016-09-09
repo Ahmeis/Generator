@@ -6,16 +6,16 @@ public class Column {
 	private boolean heading=true, Direction = false,switchSide =false;
 	private int xSep, ySep;
 	private Font nFont;
-	private int radius, fStyle, fSize, headingHeight =0;
+	private int radius, headingHeight =0;
 	private Graphics2D g2;
-	private String fName,choices[];
+	private String choices[];
 	private FontMetrics fm;
 	Column(Circle A[]){
 		circles = A;
 		chNum = A.length;
 		g2 = A[0].getGraphics();
 		radius = A[0].getRadius();
-		nFont = new Font(A[0].getFontName(),Font.BOLD,(A[0].getFontSize()*11)/9);
+		nFont = new Font(A[0].getFont().getFontName(),Font.BOLD,(A[0].getFont().getSize()*11)/9);
 		getChoices();
 	}
 	Column(Column Old){
@@ -23,9 +23,6 @@ public class Column {
 		chNum = circles.length;
 		g2 = Old.getGraphics();
 		nFont = Old.getFont();
-		fName = Old.getFontName();
-		fStyle = Old.getFontStyle();
-		fSize = Old.getFontSize();
 		heading = Old.getHeading();
 		Direction = Old.getDirection();
 		switchSide = Old.getSwitchSide();
@@ -104,40 +101,18 @@ public class Column {
 	}
 	void setFont(Font f){
 		nFont = f;
-		fName = f.getFontName();
-		fStyle = f.getStyle();
-		fSize = f.getSize();
-	}
-	void setFont(String f, int style, int size){
-		nFont = new Font(f,style,size);
-		fName = f;
-		fStyle = style;
-		fSize = size;
 	}
 	Font getFont(){
 		return nFont;
 	}
-	String getFontName(){
-		return nFont.getFontName();
-	}
-	int getFontStyle(){
-		return nFont.getStyle();
-	}
-	
-	int getFontSize(){
-		return nFont.getSize();
-	}
 	void setFontSize(int size){
-		nFont = new Font(fName,fStyle,size);
-		fSize = size;
+		nFont = new Font(nFont.getFontName(),nFont.getStyle(),size);
 	}
 	void setFontStyle(int style){
-		nFont = new Font(fName,style,fSize);
-		fStyle = style;
+		nFont = new Font(nFont.getFontName(),style,nFont.getSize());
 	}
 	void setFontName(String name){
-		nFont = new Font(name,fStyle,fSize);
-		fName = name;
+		nFont = new Font(name,nFont.getStyle(),nFont.getSize());
 	}
 	private void setGraphicsFont(){
 		g2.setFont(nFont);
