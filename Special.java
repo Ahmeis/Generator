@@ -1,5 +1,5 @@
 import java.awt.*;
-public class Speical {
+public class Special {
 	private int width;
 	private int chNum, IDL, xSep, ySep, fNum, tHeight, IDH;
 	private int align; // -1 left, 1 right else center
@@ -9,15 +9,15 @@ public class Speical {
 	private Font tFont, fFont;
 	private FontMetrics fm;
 	private Graphics2D  g2;
-	Speical(Circle A[], int IDlength){
+	Special(Circle A[], int IDlength){
 		circles = A;
 		chNum = A.length;
 		ID = true;
 		IDL = IDlength;
 	}
-	Speical(){
-		
+	Special(){
 	}
+	
 	private void setGraphicsTextFont(){
 		g2.setFont(tFont);
 		g2.setColor(Color.black);
@@ -50,6 +50,9 @@ public class Speical {
 		fFont = f;
 	}
 	
+	int getWidth(){
+		return width;
+	}
 	void setSpeicalWidth(int W){
 		width = W;
 	}
