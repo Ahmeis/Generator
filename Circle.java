@@ -79,15 +79,6 @@ public class Circle{
 		g2.drawString(choice, Cx-fm.stringWidth(choice)/2+xOffset,
 						Cy + fm.getHeight() -fm.getAscent()*14/15 +yOffset);
 	}
-	void setFontSize(int size){
-		cFont = new Font(cFont.getFontName(),cFont.getStyle(),size);
-	}
-	void setFontName(String name){
-		cFont = new Font(name, cFont.getStyle(),cFont.getSize());
-	}
-	void setFontStyle(int style){
-		cFont = new Font(cFont.getFontName(), style, cFont.getSize());
-	}
 	private void setGraphicsFont(){
 		g2.setFont(cFont);
 		fm = g2.getFontMetrics();

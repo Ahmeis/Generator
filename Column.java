@@ -100,15 +100,6 @@ public class Column {
 	Font getFont(){
 		return nFont;
 	}
-	void setFontSize(int size){
-		nFont = new Font(nFont.getFontName(),nFont.getStyle(),size);
-	}
-	void setFontStyle(int style){
-		nFont = new Font(nFont.getFontName(),style,nFont.getSize());
-	}
-	void setFontName(String name){
-		nFont = new Font(name,nFont.getStyle(),nFont.getSize());
-	}
 	private void setGraphicsFont(){
 		g2.setFont(nFont);
 		fm = g2.getFontMetrics();
