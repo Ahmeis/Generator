@@ -17,7 +17,6 @@ public class Circle{
 		cFont = Old.getFont();
 		fColor = Old.getFontColor();
 		g2 = Old.getGraphics();
-		fm = Old.getFontMetrics();
 		choice = S;
 	}
 	Circle(Circle Old, String S, int xOffset, int yOffset){
@@ -26,14 +25,11 @@ public class Circle{
 		cFont = Old.getFont();
 		fColor = Old.getFontColor();
 		g2 = Old.getGraphics();
-		fm = Old.getFontMetrics();
 		choice = S;
 		this.xOffset = xOffset;
 		this.yOffset = yOffset;
 	}
-	FontMetrics getFontMetrics(){
-		return fm;
-	}
+	
 	int getRadius(){
 		return radius;
 	}
