@@ -18,7 +18,7 @@ public class Column {
 		nFont = new Font(A[0].getFont().getFontName(),Font.BOLD,(A[0].getFont().getSize()*11)/9);
 		getChoices();
 	}
-	Column(Column Old){
+	Column(Column Old,int QN, int numOffset){
 		circles = Old.getCircles();
 		chNum = circles.length;
 		g2 = Old.getGraphics();
@@ -26,9 +26,11 @@ public class Column {
 		heading = Old.getHeading();
 		Direction = Old.getDirection();
 		switchSide = Old.getSwitchSide();
-		xSep = Old.getXSep();
-		ySep = Old.getYSep();
+		xSep = Old.getHorizontalSeparation();
+		ySep = Old.getVerticalSeparation();
 		radius = circles[0].getRadius();
+		qNum = QN;
+		nOffset = numOffset;
 		getChoices();
 	}
 	
@@ -37,12 +39,6 @@ public class Column {
 		for(int i=0;i<chNum;i++){
 			choices[i]=circles[i].getChoice();
 		}
-	}
-	int getXSep(){
-		return xSep;
-	}
-	int getYSep(){
-		return ySep;
 	}
 	boolean getSwitchSide(){
 		return switchSide;
@@ -56,18 +52,17 @@ public class Column {
 	int getColumnWidth(){
 		return xSep*(1+chNum)+fm.stringWidth(Integer.toString(qNum+nOffset))-radius; 
 	}
+	void setSwitchSide(boolean swtch){
+		switchSide = swtch;
+	}
 	void setDirection(boolean R2L){
 		Direction = R2L;
 	}
 	boolean getDirection(){
 		return Direction;
 	}
-	void setHeading(){
-		heading = true;
-	}
-	void removeHeading(){
-		heading = false;
-		headingHeight=0;
+	void setHeading(boolean set){
+		heading = set;
 	}
 	boolean getHeading(){
 		return heading;
@@ -177,6 +172,8 @@ public class Column {
 	void writeColumn(int Cx, int Ty){
 		if(heading){
 			writeHeading(Cx,Ty);
+		}else{
+			headingHeight = ySep;
 		}
 		int Ox,mid;
 		mid = chNum/2;
