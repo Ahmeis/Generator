@@ -18,7 +18,7 @@ public class Column {
 		nFont = new Font(A[0].getFont().getFontName(),Font.BOLD,(A[0].getFont().getSize()*11)/9);
 		getChoices();
 	}
-	Column(Column Old,int QN, int numOffset){
+	Column(Column Old, int QN, int numOffset){
 		circles = Old.getCircles();
 		chNum = circles.length;
 		g2 = Old.getGraphics();
@@ -50,6 +50,7 @@ public class Column {
 		this.g2 = g2;
 	}
 	int getColumnWidth(){
+		setGraphicsFont();
 		return xSep*(1+chNum)+fm.stringWidth(Integer.toString(qNum+nOffset))-radius; 
 	}
 	void setSwitchSide(boolean swtch){
@@ -85,9 +86,6 @@ public class Column {
 	int getVerticalSeparation(){
 		return ySep;
 	}
-	int getNumberingEnd(){
-		return nOffset+qNum;
-	}
 	int getQuestionsNumber(){
 		return qNum;
 	}
@@ -108,8 +106,8 @@ public class Column {
 	private void writeHeading(int Cx, int Ty){
 		int mid = chNum/2,Ox=0;
 		setGraphicsFont();
-		int Hy = fm.getHeight();
-		headingHeight = Hy+ySep;
+		int Hy = ySep/2 + fm.getHeight() -fm.getAscent();
+		headingHeight =ySep*3/2;
 		if(chNum%2==1){
 			Ox = xSep/2;
 			if(!Direction){
@@ -164,7 +162,7 @@ public class Column {
 		if(heading){
 			writeHeading(Cx,Ty);
 		}else{
-			headingHeight = ySep;
+			headingHeight = ySep/2;
 		}
 		int Ox,mid;
 		mid = chNum/2;
