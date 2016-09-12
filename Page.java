@@ -5,6 +5,7 @@ public class Page {
 	private boolean orientation,sExist;
 	private int D[],cOffset, cLength;
 	private final int width =0,mTop =1 ,tHeight =2, mSide =3;
+	
 	Page(Graphics2D g2,Column[] C, int columnOffset, int columnLength){
 		sExist = false;
 		column = C;
@@ -24,11 +25,11 @@ public class Page {
 		}
 		special.setGraphics(g2);
 	}
-	Page(Page Old,Graphics2D g2, int columnOffset, int columnLength){
+	Page(Page Old,Graphics2D g2, int columnLength){
 		sExist = false;
 		column = Old.getColumns();
 		orientation = Old.getOrientation();
-		cOffset = columnOffset;
+		cOffset = Old.getNextColumnNumber();
 		D = Old.getDimensions();
 		cLength = columnLength;
 		for(int i=cOffset;i<cOffset+cLength;i++){
@@ -36,6 +37,9 @@ public class Page {
 		}
 	}
 	
+	int getNextColumnNumber(){
+		return cOffset+cLength;
+	}
 	int[] getDimensions(){
 		return D;
 	}
@@ -77,7 +81,7 @@ public class Page {
 		if(xSep>D[mSide]){
 			special.writeSpecial(xSep+sW/2, Ty);
 			for(int i=0;i<cLength;i++){
-				Dx = (i+1)*xSep + sW + (i-1)*cW + cW/2;
+				Dx = (i+2)*xSep + sW + i*cW + cW/2;
 				column[i].writeColumn(Dx, Ty);
 			}
 		}else{
@@ -85,7 +89,7 @@ public class Page {
 			xSep /=cLength;
 			special.writeSpecial(D[mSide]+sW/2, Ty);
 			for(int i=0;i<cLength;i++){
-				Dx = D[mSide] + sW + (i-1)*cW + (i+1)*xSep + cW/2;
+				Dx = D[mSide] + sW + i*cW + (i+2)*xSep + cW/2;
 				column[i].writeColumn(Dx, Ty);
 			}
 		}
@@ -102,7 +106,7 @@ public class Page {
 		if(xSep>D[mSide]){
 			special.writeSpecial(W-xSep-sW/2, Ty);
 			for(int i=0;i<cLength;i++){
-				Dx = W - ((i+1)*xSep + sW + (i-1)*cW + cW/2);
+				Dx = W - ((i+2)*xSep + sW + i*cW + cW/2);
 				column[i].writeColumn(Dx, Ty);
 			}
 		}else{
@@ -110,7 +114,7 @@ public class Page {
 			xSep /=cLength;
 			special.writeSpecial(W -D[mSide]-sW/2, Ty);
 			for(int i=0;i<cLength;i++){
-				Dx = W-( D[mSide] + sW + (i-1)*cW + (i+1)*xSep + cW/2);
+				Dx = W-( D[mSide] + sW + i*cW + (i+2)*xSep + cW/2);
 				column[i].writeColumn(Dx, Ty);
 			}
 		}
@@ -120,35 +124,35 @@ public class Page {
 		W = D[width];
 		cW = column[0].getColumnWidth();
 		Ty = D[mTop];
-		xSep = D[width] - column.hashCode()*cW;
+		xSep = D[width] - cLength*cW;
 		xSep/=(cLength+1);
 		if(xSep>D[mSide]){
-			for(int i=cOffset;i<cOffset+cLength;i++){
-				Dx = W -( (i+1)*xSep +(i-1)*cW + cW/2);
-				column[i].writeColumn(Dx, Ty);
+			for(int i=0;i<cLength;i++){
+				Dx = W -( (i+1)*xSep + i*cW + cW/2);
+				column[i+cOffset].writeColumn(Dx, Ty);
 			}
 		}else{
-			for(int i=cOffset;i<cOffset+cLength;i++){
-				Dx = W - (D[mSide] + i*xSep +(i-1)*cW +cW/2);
-				column[i].writeColumn(Dx, Ty);
+			for(int i=0;i<cLength;i++){
+				Dx = W - (D[mSide] + i*xSep +i*cW +cW/2);
+				column[i+cOffset].writeColumn(Dx, Ty);
 			}
 		}
 	}
 	private void writeNormalPageL2R(){
-		int xSep, Ty, cW,Dx;
+		int xSep, Ty, cW, Dx;
 		cW = column[0].getColumnWidth();
 		Ty = D[mTop];
-		xSep = D[width] - column.hashCode()*cW;
+		xSep = D[width] - cLength*cW;
 		xSep/=(cLength+1);
 		if(xSep>D[mSide]){
-			for(int i=cOffset;i<cOffset+cLength;i++){
-				Dx = (i+1)*xSep +(i-1)*cW + cW/2;
-				column[i].writeColumn(Dx, Ty);
+			for(int i=0;i<cLength;i++){
+				Dx = (i+1)*xSep +i*cW + cW/2;
+				column[i+cOffset].writeColumn(Dx, Ty);
 			}
 		}else{
-			for(int i=cOffset;i<cOffset+cLength;i++){
-				Dx = D[mSide] + i*xSep +(i-1)*cW +cW/2;
-				column[i].writeColumn(Dx, Ty);
+			for(int i=0;i<cLength;i++){
+				Dx = D[mSide] + i*xSep +i*cW +cW/2;	
+				column[i+cOffset].writeColumn(Dx, Ty);
 			}
 		}
 	}
