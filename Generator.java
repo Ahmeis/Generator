@@ -12,7 +12,7 @@ public class Generator{
 	private int mSide, mTop, mBottom; // Margin Dimensions
 	private double thickness; // Circle Thickness
 	private String title, text, field[], choices[], IDC[]; 
-	private Font fText, fTitle, fCircle, fField, hFont;
+	private Font fText, fTitle, fCircle, fField, nFont;
 	private int align; // Text alignment
 	private boolean ID, heading;// Special Exist, ID Exist, Heading Exist
 	private boolean orientation, SS; // Orientation ,Numbering flip
@@ -34,6 +34,8 @@ public class Generator{
 	private FontMetrics fm;
 	private Page pages[];
 	private String ProjectName;
+	private int Dimensions[];
+	private final int dWidth =0, dHeight =1, dmTop =2, dmBottom =3, dtHeight =4, dmSide =5;
 	Generator(BufferedImage A){
 		image = A;
 		g2 = image.createGraphics();
@@ -115,10 +117,10 @@ public class Generator{
 	
 	private void setCQN(){ // Get Column only page maximum questions number
 		if(heading){
-			CQN= (maxHeight)/yCS -1;
+			CQN= (maxHeight)/yCS -2;
 		}
 		else{
-			CQN = maxHeight/yCS;
+			CQN = maxHeight/yCS -1;
 		}
 	}
 	private void setColumnPerPage(){
@@ -136,9 +138,9 @@ public class Generator{
 	}
 	private void setSCQN(){
 		if(heading){
-			SCQN = (maxHeight-tHeight)/yCS -1;
+			SCQN = (maxHeight-tHeight)/yCS -2;
 		}else{
-			SCQN = (maxHeight -tHeight)/yCS;
+			SCQN = (maxHeight -tHeight)/yCS -1;
 		}
 	}
 	private void setColumnSNumber(){
@@ -197,8 +199,8 @@ public class Generator{
 	void setSwitchSide(boolean swtch){
 		SS = swtch;
 	}
-	void setHeadingFont(Font f){
-		hFont = f;
+	void setNumberingFont(Font f){
+		nFont = f;
 	}
 	private void setColumnBase(){
 		columnBase = new Column(cCircle);
@@ -206,7 +208,7 @@ public class Generator{
 		columnBase.setVerticalSeparation(yCS);
 		columnBase.setDirection(orientation);
 		columnBase.setHeading(heading);
-		columnBase.setFont(hFont);
+		columnBase.setFont(nFont);
 		columnBase.setGraphics(g2);
 		columnBase.setSwitchSide(SS);
 		cWidth = columnBase.getColumnWidth();
@@ -229,7 +231,7 @@ public class Generator{
 			for(int i=0;i<colNum-1;i++){
 				column[i+sColNum]= new Column(columnBase,CQN,Of + CQN*i);
 			}
-			column[colNum+sColNum-1]= new Column(columnBase,Remainder((qNum-Of),CQN),Of + CQN*colNum-1);
+			column[colNum+sColNum-1]= new Column(columnBase,Remainder((qNum-Of),CQN),Of + CQN*(colNum-1));
 		}
 	}
 	void setMinimumColumnSeparation(int s){
@@ -306,6 +308,10 @@ public class Generator{
 		images = new BufferedImage[pagesNumber];
 	}
 	private void setPages(){
+		setDimensions();
+		insertTitle();
+		setSepcial();
+		setColumns();
 		if(colNum==0){
 			pagesNumber =1;
 		}else{
@@ -314,10 +320,13 @@ public class Generator{
 		pages = new Page[pagesNumber];
 		setImages();
 		setNewGraphics(0);
+		setDimensions();
 		setSepcial();
 		setColumns();
 		insertTitle();
 		pages[0] = new Page(g2, column,special,sColNum);
+		pages[0].setDimensions(Dimensions);
+		pages[0].writePage();
 		int counter = colNum;
 		for(int i=0;i<pagesNumber-1;i++){
 			setNewGraphics(i+1);
@@ -336,10 +345,17 @@ public class Generator{
 			output = new File(ProjectName + i +".jpg");
 			ImageIO.write(images[i],"jpg",output);
 		}
-		output = new File(ProjectName +".jpg");
-		ImageIO.write(image,"jpg",output);
 	}
 	
+	private void setDimensions(){
+		Dimensions =new int[6];
+		Dimensions[dWidth] = width;
+		Dimensions[dHeight] = height;
+		Dimensions[dmTop] = mTop;
+		Dimensions[dmBottom] = mBottom;
+		Dimensions[dtHeight] = tHeight;
+		Dimensions[dmSide] = mSide;
+	}
 	void setProjectName(String name){
 		ProjectName = name;
 	}
