@@ -77,7 +77,7 @@ public class Special {
 	private void writeText(int Cx, int Ty){
 		setGraphicsTextFont();
 		String temp=text;
-		Ty+=(ySep/2+fm.getHeight()-fm.getAscent());
+		Ty+=(3*ySep/2+fm.getHeight()-fm.getAscent());
 		int Dx,lineCount=0,Hy,curLen;
 		Hy = fm.getHeight();
 		switch(align){
@@ -176,7 +176,7 @@ public class Special {
 			}
 			break;
 		}
-		tHeight = (lineCount-1)*Hy +fm.getHeight() -fm.getAscent() +ySep/2;
+		tHeight = (lineCount-1)*Hy +fm.getHeight() -fm.getAscent() +3*ySep/2;
 	}
 	private void writeID(int Cx, int Ty){
 		int mid = IDL/2, Ox=0;
