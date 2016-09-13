@@ -48,6 +48,8 @@ public class Column {
 	}
 	void setGraphics(Graphics2D g2){
 		this.g2 = g2;
+		for(int i=0;i<circles.length;i++)
+			circles[i].setGraphics(g2);
 	}
 	int getColumnWidth(){
 		setGraphicsFont();
@@ -106,8 +108,8 @@ public class Column {
 	private void writeHeading(int Cx, int Ty){
 		int mid = chNum/2,Ox=0;
 		setGraphicsFont();
-		int Hy = ySep/2 + fm.getHeight() -fm.getAscent();
-		headingHeight =ySep*3/2;
+		int Hy = 3*ySep/2 + fm.getHeight() -fm.getAscent();
+		headingHeight =ySep*5/2;
 		if(chNum%2==1){
 			Ox = xSep/2;
 			if(!Direction){
@@ -162,7 +164,7 @@ public class Column {
 		if(heading){
 			writeHeading(Cx,Ty);
 		}else{
-			headingHeight = ySep/2;
+			headingHeight = 3*ySep/2;
 		}
 		int Ox,mid;
 		mid = chNum/2;
