@@ -1,7 +1,6 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 import javax.imageio.ImageIO;
 
@@ -36,6 +35,7 @@ public class Generator{
 	private String ProjectName;
 	private int Dimensions[];
 	private final int dWidth =0, dHeight =1, dmTop =2, dmBottom =3, dtHeight =4, dmSide =5;
+	private Location locations[];
 	Generator(BufferedImage A){
 		image = A;
 		g2 = image.createGraphics();
@@ -203,7 +203,7 @@ public class Generator{
 		nFont = f;
 	}
 	private void setColumnBase(){
-		columnBase = new Column(cCircle);
+		columnBase = new Column(cCircle, locations);
 		columnBase.setHorizontalSeparation(xCS);
 		columnBase.setVerticalSeparation(yCS);
 		columnBase.setDirection(orientation);
@@ -244,7 +244,7 @@ public class Generator{
 	private void setSepcial(){
 		if(ID){
 			setIDCircles();
-			special = new Special(IDCircle, IDL);
+			special = new Special(IDCircle, IDL, locations);
 			special.setVerticalSeparation(yCS);
 			special.setHorizontalSeparation(xCS);
 		}
@@ -312,6 +312,7 @@ public class Generator{
 		insertTitle();
 		setSepcial();
 		setColumns();
+		setLocationNumber();
 		if(colNum==0){
 			pagesNumber =1;
 		}else{
@@ -324,14 +325,20 @@ public class Generator{
 		setSepcial();
 		setColumns();
 		insertTitle();
-		pages[0] = new Page(g2, column,special,sColNum);
+		int lOffset =1;
+		setLocationBase(1);
+		pages[0] = new Page(g2, column,special,sColNum ,locations);
 		pages[0].setDimensions(Dimensions);
 		pages[0].writePage();
+		lOffset = pages[0].getLocationOffset();
 		int counter = colNum;
 		for(int i=0;i<pagesNumber-1;i++){
 			setNewGraphics(i+1);
-			pages[i+1] = new Page(pages[i],g2,Divide(counter,colPP));
+			setLocationBase(i+1);
+			pages[i+1] = new Page(pages[i],g2,Divide(counter,colPP),i+2);
+			pages[i+1].setLocationOffset(lOffset);
 			pages[i+1].writePage();
+			lOffset = pages[i+1].getLocationOffset();
 			counter -=colPP;
 		}
 	}
@@ -346,6 +353,23 @@ public class Generator{
 			ImageIO.write(images[i],"jpg",output);
 		}
 	}
+	void GenerateModelFile() throws IOException{
+		File output = new File(ProjectName + ".txt");
+		BufferedWriter writer = new BufferedWriter(new FileWriter(output));
+		for(int i=1;i<locations.length;i++){
+			writer.write(locations[i].getLocation());
+			writer.newLine();
+		}
+		writer.close();
+	}
+	
+	private void setLocationNumber(){
+		int x = qNum * choices.length + IDL * IDC.length +1;
+		locations = new Location[x];
+	}
+	private void setLocationBase(int pageNumber){
+		locations[0] = new Location(mSide/2,mTop/2, pageNumber);
+	}	
 	
 	private void setDimensions(){
 		Dimensions =new int[6];
