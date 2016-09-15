@@ -10,13 +10,17 @@ public class Column {
 	private Graphics2D g2;
 	private String choices[];
 	private FontMetrics fm;
-	Column(Circle A[]){
+	private Location locations[];
+	private int lOffset, pageNumber;
+	
+	Column(Circle A[], Location[] loc){
 		circles = A;
 		chNum = A.length;
 		g2 = A[0].getGraphics();
 		radius = A[0].getRadius();
 		nFont = new Font(A[0].getFont().getFontName(),Font.BOLD,(A[0].getFont().getSize()*11)/9);
 		getChoices();
+		locations = loc;
 	}
 	Column(Column Old, int QN, int numOffset){
 		circles = Old.getCircles();
@@ -29,11 +33,12 @@ public class Column {
 		xSep = Old.getHorizontalSeparation();
 		ySep = Old.getVerticalSeparation();
 		radius = circles[0].getRadius();
+		locations = Old.getLocation();
 		qNum = QN;
 		nOffset = numOffset;
 		getChoices();
 	}
-	
+
 	private void getChoices(){
 		choices = new String[chNum];
 		for(int i=0;i<chNum;i++){
@@ -160,13 +165,28 @@ public class Column {
 			}
 		}
 	}
+	
+	void setLocationOffset(int O){
+		lOffset = O;
+	}
+	int getLocationOffset(){
+		return lOffset;
+	}
+	void setPageNumber(int num){
+		pageNumber = num;
+	}
+	Location[] getLocation(){
+		return locations;
+	}
+	
 	void writeColumn(int Cx, int Ty){
+		locations[0].setType(false);
 		if(heading){
 			writeHeading(Cx,Ty);
 		}else{
 			headingHeight = 3*ySep/2;
 		}
-		int Ox,mid;
+		int Ox,mid,Dx,Dy;
 		mid = chNum/2;
 		Ox=0;
 		if(chNum%2!=0){
@@ -174,17 +194,27 @@ public class Column {
 		}
 		if(!Direction){
 			writeNumbering(Cx-mid*xSep-Ox, Ty+ headingHeight);
-			for(int i=1;i<=chNum;i++){
-				for(int j=0;j<qNum;j++){
-					circles[i-1].drawCircle(Cx-(mid-i)*xSep-Ox, Ty + headingHeight +j*ySep);
+			for(int j=0;j<qNum;j++){
+				for(int i=1;i<=chNum;i++){
+					Dx = Cx-(mid-i)*xSep-Ox;
+					Dy = Ty + headingHeight +j*ySep;
+					circles[i-1].drawCircle(Dx, Dy);
+					locations[lOffset] = new Location(locations[0],Dx,Dy,choices[i-1],j+1+nOffset);
+					locations[lOffset].setPageNumber(pageNumber);
+					lOffset++;
 				}
 			}
 		}
 		else{
 			writeNumbering(Cx+mid*xSep+Ox,Ty+headingHeight);
-			for(int i=1;i<=chNum;i++){
-				for(int j=0;j<qNum;j++){
-					circles[i-1].drawCircle(Cx+(mid-i)*xSep+Ox, Ty + headingHeight +j*ySep);
+			for(int j=0;j<qNum;j++){
+				for(int i=1;i<=chNum;i++){
+					Dx = Cx+(mid-i)*xSep+Ox;
+					Dy = Ty + headingHeight +j*ySep;
+					circles[i-1].drawCircle(Dx, Dy);
+					locations[lOffset] = new Location(locations[0],Dx,Dy,choices[i-1],j+1+nOffset);
+					locations[lOffset].setPageNumber(pageNumber);
+					lOffset++;
 				}
 			}
 		}
