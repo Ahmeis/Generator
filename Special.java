@@ -9,13 +9,14 @@ public class Special {
 	private Font tFont, fFont;
 	private FontMetrics fm;
 	private Graphics2D  g2;
-	Special(Circle A[], int IDlength){
+	private Location locations[];
+	private int lOffset=1;
+	Special(Circle A[], int IDlength, Location[] loc){
 		circles = A;
 		chNum = A.length;
 		ID = true;
 		IDL = IDlength;
-	}
-	Special(){
+		locations = loc;
 	}
 	
 	private void setGraphicsTextFont(){
@@ -48,6 +49,10 @@ public class Special {
 	}
 	void setFieldFont(Font f){
 		fFont = f;
+	}
+	
+	int getLocationOffset(){
+		return lOffset;
 	}
 	
 	int getWidth(){
@@ -179,7 +184,8 @@ public class Special {
 		tHeight = (lineCount-1)*Hy +fm.getHeight() -fm.getAscent() +3*ySep/2;
 	}
 	private void writeID(int Cx, int Ty){
-		int mid = IDL/2, Ox=0;
+		locations[0].setType(true);
+		int mid = IDL/2, Ox=0, Dx, Dy;
 		if(IDL%2==1){
 			
 				Cx +=xSep;
@@ -189,7 +195,11 @@ public class Special {
 		}
 		for(int i=1;i<=IDL;i++){
 			for(int j=0;j<chNum;j++){
-				circles[j].drawCircle(Cx+(mid-i)*xSep-Ox, Ty +(j+1)*ySep);
+				Dx = Cx+(mid-i)*xSep-Ox;
+				Dy = Ty +(j+1)*ySep;
+				circles[j].drawCircle(Dx,Dy);
+				locations[lOffset] = new Location(locations[0],Dx, Dy, circles[j].getChoice(),i);
+				lOffset++;
 			}
 		}
 		IDH = (chNum+1)*ySep;

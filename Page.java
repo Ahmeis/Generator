@@ -7,8 +7,9 @@ public class Page {
 	private final int width =0, height =1, mTop =2, mBottom =3 ,tHeight =4, mSide =5;
 	private int y1, y2 ,y3;
 	private Graphics2D g2;
-	
-	Page(Graphics2D g2,Column[] C, int columnOffset, int columnLength){
+	private Location locations[];
+	private int lOffset=1;
+	Page(Graphics2D g2,Column[] C, int columnOffset, int columnLength, Location[] Loc){
 		sExist = false;
 		column = C;
 		cOffset = columnOffset;
@@ -17,30 +18,36 @@ public class Page {
 			column[i].setGraphics(g2);
 		}
 		this.g2 = g2;
+		locations = Loc;
 	}
-	Page(Graphics2D g2,Column[] C, Special S,int columnLength){
+	Page(Graphics2D g2,Column[] C, Special S,int columnLength, Location[] Loc){
 		column = C;
 		special = S;
 		sExist = true;
 		cLength = columnLength;
 		for(int i=0;i<cLength;i++){
 			column[i].setGraphics(g2);
+			column[i].setPageNumber(1);
 		}
+		locations = Loc;
 		special.setGraphics(g2);
 		this.g2 = g2;
 	}
-	Page(Page Old,Graphics2D g2, int columnLength){
+	Page(Page Old,Graphics2D g2, int columnLength, int pageNumber){
 		sExist = false;
 		column = Old.getColumns();
 		orientation = Old.getOrientation();
 		cOffset = Old.getNextColumnNumber();
 		D = Old.getDimensions();
+		locations = Old.getLocations();
 		cLength = columnLength;
 		for(int i=cOffset;i<cOffset+cLength;i++){
 			column[i].setGraphics(g2);
+			column[i].setPageNumber(pageNumber);
 		}
 		this.g2 = g2;
 	}
+	
 	
 	int getNextColumnNumber(){
 		return cOffset+cLength;
@@ -62,12 +69,22 @@ public class Page {
 		D = A;
 	}
 	
+	void setLocationOffset(int O){
+		lOffset = O;
+	}
+	int getLocationOffset(){
+		return lOffset;
+	}
+	Location[] getLocations(){
+		return locations;
+	}
+	
 	private void setLength(){
 		y1 =D[mTop]*5/2;
 		y2 = D[tHeight]+D[mTop]*5/2;
 		y3 =D[height]-D[mBottom]*3/2;
 	}
-	
+		
 	void writePage(){
 		setLength();
 		if(sExist){
@@ -94,11 +111,14 @@ public class Page {
 		xSep/=(cLength+2);
 		if(xSep>D[mSide]){
 			special.writeSpecial(xSep+sW/2, Ty);
+			lOffset = special.getLocationOffset();
 			g2.setColor(Color.BLACK);
 			g2.drawLine(xSep*3/2 + sW, y2, xSep*3/2 + sW, y3);
 			for(int i=0;i<cLength;i++){
 				Dx = (i+2)*xSep + sW + i*cW + cW/2;
+				column[i].setLocationOffset(lOffset);
 				column[i].writeColumn(Dx, Ty);
+				lOffset = column[i].getLocationOffset();
 				if(i!=cLength-1){
 					g2.setColor(Color.BLACK);
 					g2.drawLine(Dx + cW/2 +xSep/2, y2, Dx + cW/2 +xSep/2, y3);
@@ -108,11 +128,14 @@ public class Page {
 			xSep = D[width] - sW - cLength*cW -D[mSide]*2;
 			xSep /=cLength;
 			special.writeSpecial(D[mSide]+sW/2, Ty);
+			lOffset = special.getLocationOffset();
 			g2.setColor(Color.BLACK);
 			g2.drawLine(xSep/2+ D[mSide]+ sW, y2, xSep/2+ D[mSide]+ sW, y3);
 			for(int i=0;i<cLength;i++){
 				Dx = D[mSide] + sW + i*cW + (i+2)*xSep + cW/2;
+				column[i].setLocationOffset(lOffset);
 				column[i].writeColumn(Dx, Ty);
+				lOffset = column[i].getLocationOffset();
 				if(i!=cLength-1){
 					g2.setColor(Color.BLACK);
 					g2.drawLine(Dx + cW/2 +xSep/2, y2, Dx + cW/2 +xSep/2, y3);
@@ -131,11 +154,14 @@ public class Page {
 		xSep/=(cLength+2);
 		if(xSep>D[mSide]){
 			special.writeSpecial(W-xSep-sW/2, Ty);
+			lOffset = special.getLocationOffset();
 			g2.setColor(Color.black);
 			g2.drawLine(W -xSep*3/2 -sW, y2, W -xSep*3/2 -sW, y3);
 			for(int i=0;i<cLength;i++){
 				Dx = W - ((i+2)*xSep + sW + i*cW + cW/2);
+				column[i].setLocationOffset(lOffset);
 				column[i].writeColumn(Dx, Ty);
+				lOffset = column[i].getLocationOffset();
 				if(i!=cLength-1){
 					g2.setColor(Color.BLACK);
 					g2.drawLine(Dx -cW/2 -xSep/2, y2, Dx -cW/2 -xSep/2, y3);
@@ -145,11 +171,15 @@ public class Page {
 			xSep = D[width] - sW - cLength*cW -D[mSide]*2;
 			xSep /=cLength;
 			special.writeSpecial(W -D[mSide]-sW/2, Ty);
+			lOffset = special.getLocationOffset();
 			g2.setColor(Color.black);
 			g2.drawLine(W- D[mSide]- sW - xSep/2, y2, W- D[mSide]- sW - xSep/2, y3);
 			for(int i=0;i<cLength;i++){
 				Dx = W-( D[mSide] + sW + i*cW + (i+2)*xSep + cW/2);
+				column[i].setLocationOffset(lOffset);
 				column[i].writeColumn(Dx, Ty);
+				lOffset = column[i].getLocationOffset();
+				System.out.println(lOffset);
 				if(i!=cLength-1){
 					g2.setColor(Color.BLACK);
 					g2.drawLine(Dx -cW/2 -xSep/2, y2, Dx -cW/2 -xSep/2, y3);
@@ -167,7 +197,9 @@ public class Page {
 		if(xSep>D[mSide]){
 			for(int i=0;i<cLength;i++){
 				Dx = W -( (i+1)*xSep + i*cW + cW/2);
+				column[i+cOffset].setLocationOffset(lOffset);
 				column[i+cOffset].writeColumn(Dx, Ty);
+				lOffset = column[i+cOffset].getLocationOffset();
 				if(i!=cLength-1){
 					g2.setColor(Color.BLACK);
 					g2.drawLine(Dx -cW/2 -xSep/2, y1, Dx -cW/2 -xSep/2, y3);
@@ -176,7 +208,9 @@ public class Page {
 		}else{
 			for(int i=0;i<cLength;i++){
 				Dx = W - (D[mSide] + i*xSep +i*cW +cW/2);
+				column[i+cOffset].setLocationOffset(lOffset);
 				column[i+cOffset].writeColumn(Dx, Ty);
+				lOffset = column[i+cOffset].getLocationOffset();
 				if(i!=cLength-1){
 					g2.setColor(Color.BLACK);
 					g2.drawLine(Dx -cW/2 -xSep/2, y1, Dx -cW/2 -xSep/2, y3);
@@ -193,7 +227,9 @@ public class Page {
 		if(xSep>D[mSide]){
 			for(int i=0;i<cLength;i++){
 				Dx = (i+1)*xSep +i*cW + cW/2;
+				column[i+cOffset].setLocationOffset(lOffset);
 				column[i+cOffset].writeColumn(Dx, Ty);
+				lOffset = column[i+cOffset].getLocationOffset();
 				if(i!=cLength-1){
 					g2.setColor(Color.BLACK);
 					g2.drawLine(Dx +cW/2 +xSep/2, y1, Dx +cW/2 +xSep/2, y3);
@@ -202,7 +238,9 @@ public class Page {
 		}else{
 			for(int i=0;i<cLength;i++){
 				Dx = D[mSide] + i*xSep +i*cW +cW/2;	
+				column[i+cOffset].setLocationOffset(lOffset);
 				column[i+cOffset].writeColumn(Dx, Ty);
+				lOffset = column[i+cOffset].getLocationOffset();
 				if(i!=cLength-1){
 					g2.setColor(Color.BLACK);
 					g2.drawLine(Dx +cW/2 +xSep/2, y1, Dx +cW/2 +xSep/2, y3);
