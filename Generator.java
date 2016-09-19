@@ -356,6 +356,12 @@ public class Generator{
 	void GenerateModelFile() throws IOException{
 		File output = new File(ProjectName + ".txt");
 		BufferedWriter writer = new BufferedWriter(new FileWriter(output));
+		writer.write("Width: "+(width-mSide));
+		writer.newLine();
+		writer.write("Height: "+(height - mTop/2 - mBottom/2));
+		writer.newLine();
+		writer.write("Radius: "+radius);
+		writer.newLine();
 		for(int i=1;i<locations.length;i++){
 			writer.write(locations[i].getLocation());
 			writer.newLine();
