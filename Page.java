@@ -87,6 +87,8 @@ public class Page {
 		
 	void writePage(){
 		setLength();
+		g2.setColor(Color.BLACK);
+		g2.drawRect(D[mSide]/2, D[mTop]/2, D[width]-D[mSide]*3/2, D[height]-D[mBottom]/2 -D[mTop]);
 		if(sExist){
 			if(orientation){
 				writeSpecialPageR2L();
